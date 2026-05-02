@@ -12,10 +12,24 @@ connectDB();
 
 const app = express();
 
-// ── CORS ─────────────────────────────────────────────────────────────────────
-// Allow requests from the React dev server and send the Authorization header
+// ── CORS ──────────────────────────────────────────────────────────────────────
+// Allow all Railway + localhost origins. In production set CORS_ORIGIN env var
+// to your exact frontend Railway URL, e.g. https://taskflow-frontend.up.railway.app
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',')
+  : ['http://localhost:3000', 'http://127.0.0.1:3000'];
+
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.some(o => origin.startsWith(o.trim()))) {
+      return callback(null, true);
+    }
+    // In development, allow all origins
+    if (process.env.NODE_ENV !== 'production') return callback(null, true);
+    return callback(new Error('Not allowed by CORS'));
+  },
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
