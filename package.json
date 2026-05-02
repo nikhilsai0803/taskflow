@@ -1,0 +1,17 @@
+{
+  "name": "taskflow",
+  "version": "1.0.0",
+  "description": "TaskFlow – Full Stack Team Task Manager",
+  "scripts": {
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm start",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "mongodb": "^7.2.0"
+  }
+}
